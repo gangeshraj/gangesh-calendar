@@ -1,0 +1,208 @@
+<div class="back_black_screen" (click)="hideCalendar()" [ngClass]="{hide_calendar_and_black_screen:calendarVisibility}"></div>
+<div class="calendar_outermost" [ngClass]="{hide_calendar_and_black_screen:calendarVisibility}">
+    <div (window:resize)="setViewPortWidth()" [ngSwitch]="viewPortWidth">
+        <div *ngSwitchCase="'mobile'" class="calendar">
+            <div class="calendar_top">
+                <div class="all_radio_encloser_with_text">
+                    <div class="radio_encloser_with_text">
+                        <div class="outer_radio_circle" [ngClass]="{checkedOuterRadio:twoWayRadioChecked===true}" (click)="radioClicked('two_way')">
+                            <div class="inner_radio_circle" [ngClass]="{checkedInnerRadio:twoWayRadioChecked===true}"></div>
+                        </div>
+                        <div class="text_right_radio">Return</div>
+                    </div>
+                    <div class="radio_encloser_with_text">
+                        <div class="outer_radio_circle" [ngClass]="{checkedOuterRadio:oneWayRadioChecked===true}" (click)="radioClicked('one_way')">
+                            <div class="inner_radio_circle" [ngClass]="{checkedInnerRadio:oneWayRadioChecked===true}"></div>
+                        </div>
+                        <div class="text_right_radio">One way</div>
+                    </div>
+                </div>
+                <div class="lowest_fare_and_spinner_encloser">
+                    <div class="lowest_fare_label_encloser">
+                        Lowest all in fares in {{ currency }} for 1 adult
+                    </div>
+                    <spinner-during-downloading></spinner-during-downloading>
+                </div>
+                <div class="dates_input_encloser">
+                    <div class="date_field">
+                        <div class="depart_date_field">
+                            <div class="depart_text">Depart Date</div>
+                            <div class="depart_input_block">
+                                <input type="text" name="depart_input" maxlength="10" (click)="$event.target.select()" [(ngModel)]="departDate" [placeholder]="departDate"/>
+                            </div>
+                            <div class="calendar_icon"><img class="calendar_img" src="../../assets/icon/calendar_icon.svg"></div>
+                        </div>
+                        <div class="between_line_dates"></div>
+                        <div class="return_date_field">
+                            <div class="return_text">Return Date</div>
+                            <div class="return_input_block">
+                                <input type="text" name="return_input" maxlength="10"  (click)="$event.target.select()" [(ngModel)]="returnDate" [placeholder]="returnDate"/>
+                            </div>
+                            <div class="calendar_icon"><img class="calendar_img" src="../../assets/icon/calendar_icon.svg"></div>
+                        </div>
+                        <!-- <div class="return_date_field">
+                            <div class="return_input_block">
+                                <input type="text" name="return_input" maxlength="10" [placeholder]="returnDate"/>
+                            </div>
+                        </div> -->
+                    </div>
+                </div>
+                <div class="calendar_day_label">
+                    <div>M</div>
+                    <div>T</div>
+                    <div>W</div>
+                    <div>T</div>
+                    <div>F</div>
+                    <div class="sat_sun">S</div>
+                    <div class="sat_sun">S</div>
+                </div>
+            </div>
+            <div class="calendar_middle">
+                <div *ngFor="let month_detail of calendarDataStructure" class="containing_month_days">
+                    <div class="month_with_year">{{month_detail[1]}}&nbsp;&nbsp;{{month_detail[3]}}</div>
+                    <div class="days_row" *ngFor="let i of [0,7,14,21,28]" >
+                            <div class="day_and_fare tooltip" *ngFor="let k of [0,1,2,3,4,5,6]" appHoverEffectOnDays
+                                [ngClass]="{disableDates:isDisable(returnMilliSeconds(+month_detail[3],+monthCode[month_detail[1]],+month_detail[5][i+k][0]))}"
+                                attr.id="{{+returnMilliSeconds(+month_detail[3],+monthCode[month_detail[1]],+month_detail[5][i+k][0])}}">
+                                <div class="between_days_row_day_and_fare">
+                                    <div class="day">{{month_detail[5][i+k][0]}}</div>
+                                    <div class="day_fare">{{month_detail[5][i+k][1]}}</div>
+                                    <span class="tooltiptext">Lowest all in fares in {{ currency }} for 1 adult</span>
+                                </div>
+                            </div>
+                    </div>
+                    <div class="days_row" *ngIf="month_detail[5][35][0]" >
+                        <div class="day_and_fare tooltip" *ngFor="let k of [0,1,2,3,4,5,6]" appHoverEffectOnDays
+                            [ngClass]="{disableDates:isDisable(returnMilliSeconds(+month_detail[3],+monthCode[month_detail[1]],+month_detail[5][35+k][0]))}"
+                            attr.id="{{+returnMilliSeconds(+month_detail[3],+monthCode[month_detail[1]],+month_detail[5][35+k][0])}}">
+                            <div class="between_days_row_day_and_fare">
+                                <div class="day">{{month_detail[5][35+k][0]}}</div>
+                                <div class="day_fare">{{month_detail[5][35+k][1]}}</div>
+                                <span class="tooltiptext">Lowest all in fares in {{ currency }} for 1 adult</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="calendar_bottom">
+                <div class="public_holiday_label_encloser">
+                </div>
+                <div class="done_button_encloser" (click)="hideCalendar()" >
+                    <button class="done_button" [disabled]="buttonDisabled">Confirm</button>
+                </div>
+            </div>
+        </div>
+        <div *ngSwitchCase="'tablet'">
+            <h1 class="tablet">
+                HERE TABLET WILL COME
+            </h1>
+        </div>
+        <div *ngSwitchCase="'desktop'" class="calendar_desktop">
+            <div class="calendar_top_desktop">
+                <div class="radio_label_spinner_desktop">
+                    <div class="display_radio_text_desktop">
+                        <div class="outer_radio_circle" [ngClass]="{checkedOuterRadio:twoWayRadioChecked===true}" (click)="radioClicked('two_way')">
+                                <div class="inner_radio_circle" [ngClass]="{checkedInnerRadio:twoWayRadioChecked===true}"></div>
+                        </div>
+                        <div class="text_right_radio_desktop">Return</div>
+                        <div class="outer_radio_circle" [ngClass]="{checkedOuterRadio:oneWayRadioChecked===true}" (click)="radioClicked('one_way')">
+                                <div class="inner_radio_circle" [ngClass]="{checkedInnerRadio:oneWayRadioChecked===true}"></div>
+                        </div>
+                        <div class="text_right_radio_desktop">One Way</div>
+                    </div>
+                    <div class="text_spinner_desktop">
+                        Lowest all in fares in {{currency}} for 1 adult&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<spinner-during-downloading ></spinner-during-downloading>
+                    </div>
+                </div>
+                <div class="depart_return_field_desktop">
+                        <div class="dates_input_encloser_desktop">
+                            <div class="date_field">
+                                <div class="depart_date_field">
+                                    <div class="depart_text">Depart Date</div>
+                                    <div class="depart_input_block">
+                                        <input type="text" name="depart_input" maxlength="10"  (click)="$event.target.select()" [(ngModel)]="departDate" [placeholder]="departDate"/>
+                                    </div>
+                                    <div class="calendar_icon"><img class="calendar_img" src="../../assets/icon/calendar_icon.svg"></div>
+                                </div>
+                                <div class="between_line_dates"></div>
+                                <div class="return_date_field">
+                                    <div class="return_text">Return Date</div>
+                                    <div class="return_input_block">
+                                        <input type="text" name="return_input" maxlength="10" (click)="$event.target.select()" [(ngModel)]="returnDate" [placeholder]="returnDate"/>
+                                    </div>
+                                    <div class="calendar_icon"><img class="calendar_img" src="../../assets/icon/calendar_icon.svg"></div>
+                                </div>
+                                <!-- <div class="return_date_field">
+                                    <div class="return_input_block">
+                                        <input type="text" name="return_input" maxlength="10" [placeholder]="returnDate"/>
+                                    </div>
+                                </div> -->
+                            </div>
+                       </div>
+                </div>
+            </div>
+            <div class="calendar_middle_desktop" >
+                <div class="left_month_desktop">
+                    <div class="left_month_section_desktop">
+                        <div (click)="leftArrowClick()" class="arrow_left_desktop" [ngClass]="{arrow_left_hide_desktop:arrowLeftHide}"></div>
+                        <div class="arrow_left_text_desktop">{{calendarDataStructureDesktop[0][1]}}&nbsp;&nbsp;{{calendarDataStructureDesktop[0][3]}}</div>
+                    </div>
+                    <div class="calendar_day_label_desktop">
+                        <div>M</div>
+                        <div>T</div>
+                        <div>W</div>
+                        <div>T</div>
+                        <div>F</div>
+                        <div class="sat_sun">S</div>
+                        <div class="sat_sun">S</div>
+                    </div>
+                    <div class="day_row_desktop" *ngFor="let i of [0,7,14,21,28,35]">
+                        <div class="day_fare_desktop tooltip"  *ngFor="let k of [0,1,2,3,4,5,6]" appHoverEffectOnDays
+                        [ngClass]="{disableDates:isDisable(returnMilliSeconds(+calendarDataStructureDesktop[0][3],+monthCode[calendarDataStructureDesktop[0][1]],+calendarDataStructureDesktop[0][5][i+k][0]))}"  
+                            attr.id="{{returnMilliSeconds(+calendarDataStructureDesktop[0][3],+monthCode[calendarDataStructureDesktop[0][1]],+calendarDataStructureDesktop[0][5][i+k][0])}}">
+                            <div class="between_days_row_day_and_fare_desktop">
+                                <div class="day_desktop">{{calendarDataStructureDesktop[0][5][i+k][0]}}</div>
+                                <div class="fare_desktop" >12345</div>
+                                <span class="tooltiptext">Lowest all in fares in {{ currency }} for 1 adult</span>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                <div class="middle_month_desktop"></div>
+                <div class="right_month_desktop">
+                    <div class="right_month_section_desktop">
+                        <div class="arrow_right_text_desktop">{{calendarDataStructureDesktop[1][1]}}&nbsp;&nbsp;{{calendarDataStructureDesktop[1][3]}}</div>
+                        <div class="arrow_right_desktop" 
+                        [ngClass]="{arrow_right_hide_desktop:arrowRightHide}"
+                        (click)="rightArrowClick()"></div>
+                    </div>
+                    <div class="calendar_day_label_desktop">
+                        <div>M</div>
+                        <div>T</div>
+                        <div>W</div>
+                        <div>T</div>
+                        <div>F</div>
+                        <div class="sat_sun">S</div>
+                        <div class="sat_sun">S</div>
+                    </div>
+                    <div class="day_row_desktop" *ngFor="let i of [0,7,14,21,28,35]">
+                        <div class="day_fare_desktop  tooltip"  *ngFor="let k of [0,1,2,3,4,5,6]" appHoverEffectOnDays
+                        [ngClass]="{disableDates:isDisable(returnMilliSeconds(+calendarDataStructureDesktop[1][3],+monthCode[calendarDataStructureDesktop[1][1]],+calendarDataStructureDesktop[1][5][i+k][0]))}"  
+                            attr.id="{{returnMilliSeconds(+calendarDataStructureDesktop[1][3],+monthCode[calendarDataStructureDesktop[1][1]],+calendarDataStructureDesktop[1][5][i+k][0])}}">
+                            <div class="between_days_row_day_and_fare_desktop">
+                                <div class="day_desktop">{{calendarDataStructureDesktop[1][5][i+k][0]}}</div>
+                                <div class="fare_desktop" >{{calendarDataStructureDesktop[1][5][i+k][1]}}</div>
+                                <span class="tooltiptext">Lowest all in fares in {{ currency }} for 1 adult</span>
+                            </div>
+                        </div>
+                    </div>
+                   </div>
+            </div>
+            <div class="calendar_bottom_desktop">
+                <div>
+                    <button class="done_button_desktop" (click)="hideCalendar()" [disabled]="buttonDisabled">Confirm</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
